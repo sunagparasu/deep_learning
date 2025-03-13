@@ -1,0 +1,14 @@
+ipywidgets
+jupyter
+numpy
+pandas
+matplotlib
+torch
+datasets
+transformers
+tqdm
+pathlib
+sklearn
+torchmetrics
+os
+random
