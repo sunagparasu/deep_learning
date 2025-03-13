@@ -1,2 +1,4 @@
-# deep_learning
-Personal projects related to deep learning
+# Introduction
+Molecular property prediction is essential for drug discovery in order to help researchers screen novel compounds. Neural networks, especially transformer models, are nowadays widely employed for this task by representing compounds as SMILES (Simplified Molecular Input Line Entry System) strings. Various research groups have written transformer architectures for predicting properties such as solubility and lipophilicity, but accurately predicting continuous values remains a challenge. Accurate prediction requires both pretraining on large chemical datasets and fine-tuning on a specific task. \\
+
+In our work, we compared different fine-tuning approaches ansd selection strategies with [large-scale chemical language model](https://huggingface.co/ibm-research/MoLFormer-XL-both-10pct) for the prediction of lipophilicity. We evaluated these methods on the lipophilicty dataset of [MoleculeNet](https://moleculenet.org/datasets-1) and compared their effectiveness and identified the most promising strategy. This report outlines the fine-tuning and data selection techniques and a performance analysis of each approach.
