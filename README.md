@@ -9,23 +9,12 @@ Here’s your summary with LaTeX equations reformatted for a Markdown-friendly e
 
 ### Methods  
 
-This study fine-tunes MoLFormer-XL, a pre-trained chemical language model, for lipophilicity prediction. Two architectures were explored: MoLFormerWithRegressionHead, which directly fine-tunes a regression head, and MoLFormerMLMWithRegressionHead, which undergoes unsupervised masked language modeling (MLM) fine-tuning before regression. To improve model interpretability, influence functions were applied to estimate how individual training points affect predictions, using Hessian Vector Products (HVP) to approximate the Hessian inverse efficiently. Data splitting was performed using Butina clustering instead of random sampling to ensure diverse molecular representations in training, validation, and test sets, leveraging Tanimoto similarity for cluster assignments. Additionally, three Parameter-Efficient Fine-Tuning (PEFT) methods were tested: (1) BitFit, which fine-tunes only bias terms, (2) LoRA, which optimizes low-rank decompositions of weight updates, and (3) IA3, which introduces learned scaling vectors for key, value, and feedforward layers while freezing pre-trained weights. All methods were trained with a learning rate of 0.0001, batch size of 128, weight decay of \(10^{-5}\), with PEFT methods running for 50 epochs and Butina clustering for 30 epochs.  
+Here, we fine-tune MoLFormer-XL, a pre-trained chemical language model, for lipophilicity prediction. Two architectures were explored: MoLFormerWithRegressionHead, which directly fine-tunes a regression head, and MoLFormerMLMWithRegressionHead, which undergoes unsupervised masked language modeling (MLM) fine-tuning before regression. To improve model interpretability, influence functions were applied to estimate how individual training points affect predictions, using Hessian Vector Products (HVP) to approximate the Hessian inverse efficiently. Data splitting was performed using Butina clustering instead of random sampling to ensure diverse molecular representations in training, validation, and test sets, leveraging Tanimoto similarity for cluster assignments. Additionally, three Parameter-Efficient Fine-Tuning (PEFT) methods were tested: 
+- BitFit, which fine-tunes only bias terms.
+- LoRA, which optimizes low-rank decompositions of weight updates.
+- IA3, which introduces learned scaling vectors for key, value, and feedforward layers while freezing pre-trained weights.
+All methods were trained with a learning rate of 0.0001, batch size of 128, weight decay of \(10^{-5}\), with PEFT methods running for 50 epochs and Butina clustering for 30 epochs.
 
-#### Reformatted Equations  
+### Results
 
-- Influence function:  
-  \[
-  \mathcal{I}_{\text{up,params}}(z) = -H_{\hat{\theta}}^{-1} \nabla_{\theta} L(z, \hat{\theta})
-  \]  
-  where \( H_{\hat{\theta}} \) is the Hessian matrix.  
-
-- Hessian approximation:  
-  \[
-  \hat{H}\theta = \frac{1}{n} \sum_{i=1}^{n} \nabla^2_\theta L(z_i, \hat{\theta})
-  \]  
-
-- Tanimoto similarity:  
-  \[
-  T(A, B) = \frac{|A \cap B|}{|A| + |B| - |A \cap B|}
-  \]  
-  where \( A \) and \( B \) are Morgan fingerprints of molecules \( X \) and \( Y \).
+This study explored different fine-tuning strategies for MoLFormer-XL in lipophilicity prediction. Direct regression fine-tuning used the AdamW optimizer with MSE loss, but results showed potential overfitting, as validation loss plateaued while the R² score stagnated. To enhance model understanding of SMILES, unsupervised Masked Language Modeling (MLM) fine-tuning was applied before regression, leading to improved R² scores and lower test loss compared to direct regression. Influence functions were used to identify high-impact training points, revealing a trend where higher lipophilicity values had greater influence, likely due to data imbalance. Adding these influential points to the training set further improved performance, achieving an R² score of 0.73 and test loss of 0.39. The Butina clustering method revealed structural patterns within the dataset, but model performance stagnated after 13 epochs, resulting in an R² score of 0.44. The influence-based approach, which incorporated additional high-impact training points, showed higher performance, though information leakage may have played a role. Among Parameter-Efficient Fine-Tuning (PEFT) methods, LoRA outperformed BitFit and IA3, achieving an R² of 0.697 with stable loss reduction and well-aligned predictions. BitFit performed poorly (R² = 0.4987), while IA3 failed to capture underlying patterns (R² = 0.0622). Overall, the combination of MLM pre-training, influence-based data selection, and LoRA yielded the best results for fine-tuning MoLFormer-XL.
